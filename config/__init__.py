@@ -63,7 +63,4 @@ def get_args():
         np.random.seed(args.seed)
         torch.manual_seed(args.seed)
         torch.cuda.manual_seed_all(args.seed)
-
-    assert not None in [args.output_dir]
-    os.makedirs(args.output_dir, exist_ok=True)
     return args
