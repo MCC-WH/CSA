@@ -22,7 +22,7 @@ DATASETS = ['oxford5k', 'paris6k', 'roxford5k', 'rparis6k']
 
 
 @torch.no_grad()
-def test(datasets, name, net, topk=128, device=torch.device('cuda'), R1M=True):
+def test(datasets, name, net, topk=128, anchor_len=512, device=torch.device('cuda'), R1M=True):
     net.eval()
     for dataset in datasets:
         # prepare config structure for the test dataset
@@ -48,18 +48,20 @@ def test(datasets, name, net, topk=128, device=torch.device('cuda'), R1M=True):
             ranks = torch.argsort(scores, dim=0, descending=True)
             _, _, _ = compute_map_and_print(dataset, 'fist-stage', name, ranks.numpy(), cfg['gnd'])
 
-            query_topk_indices = torch.topk(torch.mm(qvecs, vecs.t()), k=topk, dim=-1)[1]
+            query_topk_indices = torch.Tensor(ranks[:topk, :]).t().long()
+            anchor_indices = torch.Tensor(ranks[:anchor_len - 1, :]).t().long()
             loader = DataLoader(FeatureFromList(features=vecs, topk_indices=query_topk_indices),
                                 batch_size=1,
                                 shuffle=False,
                                 num_workers=8,
                                 pin_memory=True)
-            # extract query vectors
             rerank_scores = torch.zeros(qvecs.size(0), topk)
             for i, input in enumerate(loader):
-                batch_size_inner = input.shape[0]
                 input = torch.cat((qvecs[i].unsqueeze(0).unsqueeze(0), input), dim=1)
-                rerank_scores[i * batch_size_inner:((i + 1) * batch_size_inner), :] = net.forward_feature(input.to(device)).data.squeeze().cpu()
+                anchor_feature = vecs[anchor_indices[i]].unsqueeze(0)
+                anchor_feature = torch.cat((qvecs[i].unsqueeze(0).unsqueeze(0), anchor_feature), dim=1)
+                affinity_feature = torch.bmm(input, anchor_feature.permute(0, 2, 1))
+                rerank_scores[i, :] = net.forward_feature(affinity_feature.to(device)).data.squeeze().cpu()
             rerank_indices = np.argsort(-rerank_scores.numpy(), axis=1)
             for i in range(rerank_scores.size(0)):
                 ranks[:topk, i] = ranks[:topk, i][rerank_indices[i]]
@@ -92,7 +94,7 @@ def main(args):
         else:
             raise ValueError(">> No checkpoint found at '{}'".format(args.resume))
 
-    test(datasets=['roxford5k', 'rparis6k'], name=args.test_name, net=model, topk=args.topk, device=device)
+    test(datasets=['roxford5k', 'rparis6k'], name=args.test_name, net=model, topk=args.topk, anchor_len=args.anchor_len, device=device)
 
 
 if __name__ == '__main__':
@@ -103,7 +105,7 @@ if __name__ == '__main__':
 
     # model related params
     parser.add_argument('--topk', type=int, default=128)
-    parser.add_argument('--sim_len', type=int, default=512)
+    parser.add_argument('--anchor_len', type=int, default=512)
     parser.add_argument('--embed_dim', type=int, default=768)
     parser.add_argument('--depth', type=int, default=12)
     parser.add_argument('--num_heads', type=int, default=12)
