@@ -76,7 +76,7 @@ def main(args):
     else:
         device = torch.device('cpu')
     model = RerankTransformer(embed_dim=args.embed_dim,
-                              topk_dim=args.sim_len,
+                              topk_dim=args.anchor_len,
                               depth=args.depth,
                               num_heads=args.num_heads,
                               mlp_ratio=args.mlp_ratio,
