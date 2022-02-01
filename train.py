@@ -28,8 +28,11 @@ def main(args):
         print('>> batch size per node:{}'.format(args.batch_size))
         print('>> num workers per node:{}'.format(args.num_workers))
 
-    dataset_names = list(eval(args.dataset_names))
-    output_dir = os.path.join(get_current_dir(), 'Experiment_{}_trainingInfo'.format(args.test_name))
+    dataset_names = list(args.dataset_names)
+    output_dir = os.path.join(get_root_dir(), 'Experiment_{}_trainingInfo'.format(args.test_name))
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir, exist_ok=True)
+    
     train_dataset = RerankDataset_TopKSIM(names=dataset_names, mode='train', topk=args.topk, sim_len=args.sim_len)
     if args.distributed:
         train_sampler = DistributedSampler(train_dataset)
