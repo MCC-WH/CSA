@@ -1,12 +1,10 @@
 #!/bin/bash
 python -m torch.distributed.launch --nproc_per_node=4 --use_env train.py \
 --test_name TopkSIM_SFM \
---input_dim 2048 \
 --embed_dim 768 \
 --num_heads 12 \
 --depth 2 \
 --topk 512 \
---test_topk 1024 \
 --sim_len 512 \
 --batch_size 256 \
 --num_workers 4 \
