@@ -3,6 +3,7 @@ Jianbo Ouyang, Hui Wu, et al.,
 NeurIPS 2021 [[arXiv](https://arxiv.org/abs/2110.13430)]
 
 ========
+
 PyTorch training code for **CSA** (**C**ontextual **S**imilarity **A**ggregation).
 We propose a visual re-ranking method by contextual similarity aggregation with transformer, obtaining **80.3 mAP** on ROxf with Medium evaluation protocols. Inference in 50 lines of PyTorch.
 
