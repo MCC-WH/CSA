@@ -158,7 +158,7 @@ def get_root():
 
 
 def get_current_dir():
-    return os.path.join(os.path.dirname(os.path.realpath(__file__)))
+    return os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 
 def get_data_root():
