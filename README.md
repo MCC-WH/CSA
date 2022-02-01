@@ -1,3 +1,5 @@
+========
+
 **CSA**: **Contextual Similarity Aggregation with Self-attention for Visual Re-ranking**,  
 Jianbo Ouyang, Hui Wu, et al.,
 NeurIPS 2021 [[arXiv](https://arxiv.org/abs/2110.13430)]
@@ -13,9 +15,6 @@ We propose a visual re-ranking method by contextual similarity aggregation with 
 Given ranking list returned by the first-round retrieval, CSA first choose the top-L images in ranking list as the anchor images and calculates the affinity features of the top-K candidates,then dynamically refine the affinity features of different candiates in parallel. Due to this parallel nature, CSA is very fast and efficient.
 
 **About the code**. 
-CSA is very simple to implement and experiment with, and we provide a
-[Notebook](https://colab.research.google.com/github/facebookresearch/detr/blob/colab/notebooks/detr_demo.ipynb)
-showing how to do inference with CSA in only a few lines of PyTorch code.
 Training code follows this idea - it is not a library,
 but simply a [train.py](train.py) importing model and criterion
 definitions with standard training loops.
