@@ -21,7 +21,7 @@ def get_args():
     parser.add_argument('--attn_drop_rate', type=float, default=0.1)
 
     # training specific args
-    parser.add_argument('--dataset_names', type=str, default='[rSfM120k-tl-resnet101-gem-w]')
+    parser.add_argument('--dataset_names', type=str, nargs="+", default='rSfM120k-tl-resnet101-gem-w')
     parser.add_argument('--resume', type=str, default=None)
 
     parser.add_argument('--topk', type=int, default=128)
