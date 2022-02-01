@@ -107,7 +107,7 @@ class RerankDataset_TopKSIM(data.Dataset):
     def __getitem__(self, index):
         try:
             topk_indices = self.topk_indices[index][:self.topk]
-            sim_indices = self.topk_indices[index][:self.sim_lem]
+            sim_indices = self.topk_indices[index][:self.sim_len]
             feature = self.features[topk_indices]
             sim_feature = self.features[sim_indices]
             sim_list = torch.mm(feature, sim_feature.t())
