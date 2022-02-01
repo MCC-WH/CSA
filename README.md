@@ -1,6 +1,6 @@
 **CSA**: **C**ontextual **S**imilarity **A**ggregation with Self-attention for Visual Re-ranking
 
-**Fine-tuning CNN Image Retrieval with No Human Annotation**,  
+**Contextual Similarity Aggregation with Self-attention for Visual Re-ranking**,  
 Jianbo Ouyang, Hui Wu, et al.,
 NeurIPS 2021 [[arXiv](https://arxiv.org/abs/2110.13430)]
 
