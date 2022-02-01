@@ -41,6 +41,8 @@ class RerankDataset_TopKSIM(data.Dataset):
         # load for image features
         self.topk = topk
         self.sim_len = sim_len
+        
+        topk = max(topk, sim_len)
 
         if len(names) > 1:
             topk_prefix = os.path.join(get_data_root(), 'train', names + '_{}sim{}topk_AUG.pkl'.format(self.sim_len, self.topk))
@@ -90,24 +92,6 @@ class RerankDataset_TopKSIM(data.Dataset):
         self.generate_relate()
 
     @torch.no_grad()
-    def generate_topk(self, topk):
-        start_time = time.time()
-        feature = self.features.cuda()
-        self.topk_indices = []
-        self.sim_indices = []
-        for i in range(self.features.size(0)):
-            query = feature[i].unsqueeze(0)
-            score = torch.sum(query * feature, dim=-1)
-            topk_indices = torch.topk(score, topk + 1)[1]
-            self.topk_indices.append(topk_indices.cpu())
-            sim_indices = torch.topk(score, self.sim_len)[1]
-            self.sim_indices.append(sim_indices.cpu())
-        self.topk_indices = torch.stack(self.topk_indices, dim=0)
-        self.sim_indices = torch.stack(self.sim_indices, dim=0)
-        del feature
-        print('>> Generate top {} indices for training in {:.2f} s'.format(self.topk, time.time() - start_time))
-
-    @torch.no_grad()
     def generate_relate(self):
         start_time = time.time()
         self.relative = []
@@ -122,8 +106,8 @@ class RerankDataset_TopKSIM(data.Dataset):
 
     def __getitem__(self, index):
         try:
-            topk_indices = self.topk_indices[index]
-            sim_indices = self.sim_indices[index]
+            topk_indices = self.topk_indices[index][:self.topk]
+            sim_indices = self.topk_indices[index][:self.sim_lem]
             feature = self.features[topk_indices]
             sim_feature = self.features[sim_indices]
             sim_list = torch.mm(feature, sim_feature.t())
