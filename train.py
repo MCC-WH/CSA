@@ -11,7 +11,7 @@ from torch.utils.data import BatchSampler, DataLoader, DistributedSampler
 from config import get_args
 from Dataset import RerankDataset_TopKSIM, collate_tuples
 from network import RerankTransformer
-from utils import MetricLogger, WarmupCos_Scheduler, create_optimizer, get_current_dir, init_distributed_mode, is_main_process
+from utils import MetricLogger, WarmupCos_Scheduler, create_optimizer, get_current_dir, init_distributed_mode, is_main_process, get_root_dir
 
 
 def main(args):
