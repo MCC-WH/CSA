@@ -11,7 +11,7 @@ from torch.utils.data import BatchSampler, DataLoader, DistributedSampler
 from config import get_args
 from Dataset import RerankDataset_TopKSIM, collate_tuples
 from network import RerankTransformer
-from utils import MetricLogger, WarmupCos_Scheduler, create_optimizer, get_current_dir, init_distributed_mode, is_main_process, get_root_dir
+from utils import MetricLogger, WarmupCos_Scheduler, create_optimizer, get_current_dir, init_distributed_mode, is_main_process
 
 
 def main(args):
@@ -29,7 +29,7 @@ def main(args):
         print('>> num workers per node:{}'.format(args.num_workers))
 
     dataset_names = list(args.dataset_names)
-    output_dir = os.path.join(get_root_dir(), 'Experiment_{}_trainingInfo'.format(args.test_name))
+    output_dir = os.path.join(get_current_dir(), 'Experiment_{}_trainingInfo'.format(args.test_name))
     if not os.path.exists(output_dir):
         os.makedirs(output_dir, exist_ok=True)
     
