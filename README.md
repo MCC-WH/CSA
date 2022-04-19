@@ -1,6 +1,6 @@
 ========
 
-**CSA**: **Contextual Similarity Aggregation with Self-attention for Visual Re-ranking**,  
+## **CSA**: **Contextual Similarity Aggregation with Self-attention for Visual Re-ranking**,  
 Jianbo Ouyang, Hui Wu, et al.,
 NeurIPS 2021 [[arXiv](https://arxiv.org/abs/2110.13430)]
 
